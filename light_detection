@@ -1,0 +1,35 @@
+int photoresistor = A0;
+int analogValue;
+
+bool light_present = false;
+
+void setup() {
+
+    pinMode(photoresistor,INPUT);
+
+}
+
+void loop() {
+    
+    analogValue = analogRead(photoresistor);
+    
+    if (!light_present) {
+        
+        // If light was NOT present in the last reading, but is now present, then:
+        if (analogValue > 15) {
+            Particle.publish("light_received", "1");
+            light_present = true;
+        }
+    } else {
+        
+        // If light WAS present in the last reading, but is no longer, then:
+        if (analogValue <= 15) {
+            Particle.publish("light_received", "0");
+            light_present = false;
+        }
+    }
+      
+      
+    delay(1000);
+
+}
